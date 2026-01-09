@@ -40,7 +40,6 @@ public class BlockPreviewRenderer {
 
             // Push new transformation for this block
             poseStack.pushPose();
-
             // Translate from world coordinates to camera-relative coordinates
             // This is the key: translate by the difference between block pos and camera pos
             double x = pos.getX() - cameraPos.x;
