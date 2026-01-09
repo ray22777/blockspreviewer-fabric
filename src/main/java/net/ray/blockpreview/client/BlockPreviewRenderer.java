@@ -1,6 +1,7 @@
 package net.ray.blockpreview.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.BlockItem;
@@ -13,9 +14,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.ray.blockpreview.PreviewManager;
 import net.ray.blockpreview.util.RenderHelper;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,35 +26,37 @@ public class BlockPreviewRenderer {
     private static List<BlockState> lastPreviewStates = new ArrayList<>();
     private static List<BlockPos> lastPreviewPositions = new ArrayList<>();
 
-    public static void onRenderWorld(PoseStack poseStack, Matrix4f projectionMatrix, float tickDelta) {
+    public static void onRenderWorld(PoseStack poseStack, Camera camera) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) return;
-
-        // Update preview position every frame
-        updatePreviewPosition();
-
         if (lastPreviewStates.isEmpty()) return;
+
+        // Get camera position
+        Vec3 cameraPos = camera.getPosition();
 
         for (int i = 0; i < lastPreviewStates.size(); i++) {
             BlockState state = lastPreviewStates.get(i);
             BlockPos pos = lastPreviewPositions.get(i);
 
+            // Push new transformation for this block
             poseStack.pushPose();
 
-            // Move to block position relative to camera
-            poseStack.translate(
-                    pos.getX() - mc.getEntityRenderDispatcher().camera.getPosition().x,
-                    pos.getY() - mc.getEntityRenderDispatcher().camera.getPosition().y,
-                    pos.getZ() - mc.getEntityRenderDispatcher().camera.getPosition().z
-            );
+            // Translate from world coordinates to camera-relative coordinates
+            // This is the key: translate by the difference between block pos and camera pos
+            double x = pos.getX() - cameraPos.x;
+            double y = pos.getY() - cameraPos.y;
+            double z = pos.getZ() - cameraPos.z;
+            poseStack.translate(x, y, z);
 
+            // Render at origin (0,0,0) after translation
             RenderHelper.renderGhostBlock(poseStack, state, pos, mc);
 
+            // Pop this block's transformation
             poseStack.popPose();
         }
     }
 
-    private static void updatePreviewPosition() {
+    public static void updatePreviewPosition() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) return;
 
@@ -121,11 +124,11 @@ public class BlockPreviewRenderer {
         BlockPos upperPos = placementPos.above();
 
         if (mc.level.getBlockState(upperPos).canBeReplaced()) {
-            if (PreviewManager.isDoorUpper(block)) {
+            if (block instanceof DoorBlock) {
                 BlockState upperDoorState = previewState.setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER);
                 lastPreviewStates.add(upperDoorState);
                 lastPreviewPositions.add(upperPos);
-            } else if (PreviewManager.isTallPlantUpper(block)) {
+            } else if (block instanceof DoublePlantBlock) {
                 BlockState upperPlantState = previewState.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
                 lastPreviewStates.add(upperPlantState);
                 lastPreviewPositions.add(upperPos);

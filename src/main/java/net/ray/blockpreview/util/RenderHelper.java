@@ -13,37 +13,42 @@ public class RenderHelper {
     public static void renderGhostBlock(PoseStack poseStack, BlockState state, BlockPos pos, Minecraft mc) {
         if (state == null || mc.level == null || mc.player == null) return;
 
-        // Setup transparency
+        // Enable transparency
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(false);
 
-        // Set global alpha
+        // Set alpha to 60% - THIS IS KEY
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 0.62f);
 
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
 
         try {
-            // Method 1: Try with translucent render type
+            // Get light level at position
             int light = LevelRenderer.getLightColor(mc.level, pos);
 
-            // Use tryRenderBlock instead of renderSingleBlock
-            mc.getBlockRenderer().renderBatched(
+            // METHOD 1: Use renderBatched with translucent buffer
+            var buffer = bufferSource.getBuffer(RenderType.translucent());
+
+            mc.getBlockRenderer().getModelRenderer().tesselateBlock(
+                    mc.level,
+                    mc.getBlockRenderer().getBlockModel(state),
                     state,
                     pos,
-                    mc.level,
                     poseStack,
-                    bufferSource.getBuffer(RenderType.translucent()),
+                    buffer,
                     false,
-                    mc.level.random
+                    mc.level.random,
+                    state.getSeed(pos),
+                    net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY
             );
 
         } catch (Exception e) {
-            // Method 2: Try without ModelData
+            // METHOD 2: Alternative approach
             try {
                 int light = LevelRenderer.getLightColor(mc.level, pos);
 
-                // Older method that might work
+                // Direct render with custom alpha
                 mc.getBlockRenderer().renderSingleBlock(
                         state,
                         poseStack,
@@ -52,15 +57,14 @@ public class RenderHelper {
                         net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY
                 );
             } catch (Exception e2) {
-                // Method 3: Direct model rendering
                 e2.printStackTrace();
             }
         }
 
-        // Flush buffer
+        // End the batch
         bufferSource.endBatch();
 
-        // Clean up
+        // Reset render states
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
