@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "tabinfo",
+	"id": "blockpreview",
 	"version": "${version}",
-	"name": "TabInfo",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Block Preview",
+	"description": "Client-side mod to preview how blocks will be placed!",
 	"authors": [
 		"Me!"
 	],
@@ -15,19 +15,13 @@
 	"icon": "assets/tabinfo/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
-			"net.ray.tabInfo.TabInfo"
-		],
-		"fabric-datagen": [
-			"net.ray.tabInfo.TabInfoDataGenerator"
+		"client": [
+			"net.ray.blockpreview.BlockPreviewMod"
 		]
 	},
-	"mixins": [
-		"tabinfo.mixins.json"
-	],
 	"depends": {
 		"fabricloader": ">=0.18.4",
-		"minecraft": "~1.20.1",
+		"minecraft": ">=1.20.1",
 		"java": ">=17",
 		"fabric-api": "*"
 	}
