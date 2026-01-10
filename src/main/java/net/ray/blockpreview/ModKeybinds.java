@@ -3,12 +3,12 @@ package net.ray.blockpreview;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class ModKeybinds {
     public static final KeyMapping.Category BLOCK_PREVIEW_CATEGORY =
-            KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath("blockpreview", "main"));
+            KeyMapping.Category.register(Identifier.withDefaultNamespace("blockpreview"));
 
     public static KeyMapping TOGGLE_PREVIEW;
     public static KeyMapping HOLD_PREVIEW;

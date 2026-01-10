@@ -35,7 +35,7 @@ public class BlockPreviewRenderer {
         var camera = mc.gameRenderer.getMainCamera();
         var bufferSource = mc.renderBuffers().bufferSource();
         // Get camera position
-        Vec3 cameraPos = camera.getPosition();
+        Vec3 cameraPos = camera.position();
 
         for (int i = 0; i < lastPreviewStates.size(); i++) {
             BlockState state = lastPreviewStates.get(i);

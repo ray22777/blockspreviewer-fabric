@@ -16,7 +16,7 @@ public class BlockPreviewMod implements ClientModInitializer {
             PreviewManager.handleInput();
             BlockPreviewRenderer.updatePreviewPosition();
         });
-        WorldRenderEvents.BEFORE_TRANSLUCENT.register( context-> {
+        WorldRenderEvents.END_MAIN.register( context-> {
             BlockPreviewRenderer.onRenderWorld();
         });
 
