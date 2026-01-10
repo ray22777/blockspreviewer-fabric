@@ -26,11 +26,14 @@ public class BlockPreviewRenderer {
     private static List<BlockState> lastPreviewStates = new ArrayList<>();
     private static List<BlockPos> lastPreviewPositions = new ArrayList<>();
 
-    public static void onRenderWorld(PoseStack poseStack, Camera camera) {
+    public static void onRenderWorld() {
         Minecraft mc = Minecraft.getInstance();
+
         if (mc.player == null || mc.level == null) return;
         if (lastPreviewStates.isEmpty()) return;
-
+        PoseStack poseStack = new PoseStack();
+        var camera = mc.gameRenderer.getMainCamera();
+        var bufferSource = mc.renderBuffers().bufferSource();
         // Get camera position
         Vec3 cameraPos = camera.getPosition();
 

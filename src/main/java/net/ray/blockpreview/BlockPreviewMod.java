@@ -2,9 +2,7 @@ package net.ray.blockpreview;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.ray.blockpreview.ModKeybinds;
-import net.ray.blockpreview.PreviewManager;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.ray.blockpreview.client.BlockPreviewRenderer;
 import net.ray.blockpreview.config.SimpleConfig;
 
@@ -18,15 +16,10 @@ public class BlockPreviewMod implements ClientModInitializer {
             PreviewManager.handleInput();
             BlockPreviewRenderer.updatePreviewPosition();
         });
-
-        // Use AFTER_TRANSLUCENT for proper transparency
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
-            BlockPreviewRenderer.onRenderWorld(
-                    context.matrixStack(),
-                    context.camera()
-            );
+        WorldRenderEvents.BEFORE_TRANSLUCENT.register( context-> {
+            BlockPreviewRenderer.onRenderWorld();
         });
 
-        System.out.println("Block Preview Mod (Fabric 1.21) initialized!");
+        System.out.println("Block Preview Mod (Fabric 1.21.11) initialized!");
     }
 }
