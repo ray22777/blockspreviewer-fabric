@@ -38,19 +38,12 @@ public class BlockPreviewRenderer {
             BlockState state = lastPreviewStates.get(i);
             BlockPos pos = lastPreviewPositions.get(i);
 
-            // Push new transformation for this block
             poseStack.pushPose();
-            // Translate from world coordinates to camera-relative coordinates
-            // This is the key: translate by the difference between block pos and camera pos
             double x = pos.getX() - cameraPos.x;
             double y = pos.getY() - cameraPos.y;
             double z = pos.getZ() - cameraPos.z;
             poseStack.translate(x, y, z);
-
-            // Render at origin (0,0,0) after translation
-            RenderHelper.renderGhostBlock(poseStack, state, pos, mc);
-
-            // Pop this block's transformation
+            RenderHelper.renderGhostBlock(poseStack, state, pos,0.62f);
             poseStack.popPose();
         }
     }
