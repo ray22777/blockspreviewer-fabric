@@ -59,7 +59,6 @@ public class RenderHelper {
                     public com.mojang.blaze3d.vertex.VertexConsumer setUv2(int u, int v) {
                         return original.setUv2(u, v);
                     }
-
                     @Override
                     public com.mojang.blaze3d.vertex.VertexConsumer setNormal(PoseStack.Pose pose, float x, float y, float z) {
                         return original.setNormal(pose, x, y, z);
