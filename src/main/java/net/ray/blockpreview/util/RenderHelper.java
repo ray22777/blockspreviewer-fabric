@@ -1,5 +1,6 @@
 package net.ray.blockpreview.util;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -10,8 +11,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 
 public class RenderHelper {
-    public static void renderGhostBlock(PoseStack poseStack, BlockState state, BlockPos pos, float alpha) {
-        Minecraft mc = Minecraft.getInstance();
+    public static void renderGhostBlock(PoseStack poseStack, BlockState state, BlockPos pos, Minecraft mc) {
+        float alpha = 0.62f;
         if (state == null || mc.level == null) return;
 
         MultiBufferSource translucentBuffer = new MultiBufferSource() {
