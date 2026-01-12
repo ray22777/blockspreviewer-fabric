@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.LightLayer;
 
 public class RenderHelper {
-    public static void renderGhostBlock(PoseStack poseStack, BlockState state, BlockPos pos, float alpha) {
-        Minecraft mc = Minecraft.getInstance();
+    public static void renderGhostBlock(PoseStack poseStack, BlockState state, BlockPos pos, Minecraft mc) {
+        float alpha = 0.62f;
         if (state == null || mc.level == null) return;
 
         int blockLight = mc.level.getBrightness(LightLayer.BLOCK, pos);

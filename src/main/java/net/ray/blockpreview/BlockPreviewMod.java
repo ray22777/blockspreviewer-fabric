@@ -19,7 +19,5 @@ public class BlockPreviewMod implements ClientModInitializer {
         WorldRenderEvents.END_MAIN.register( context-> {
             BlockPreviewRenderer.onRenderWorld();
         });
-
-        System.out.println("Block Preview Mod (Fabric 1.21.11) initialized!");
     }
 }
