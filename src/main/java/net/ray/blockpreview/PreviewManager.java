@@ -4,12 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.ray.blockpreview.config.SimpleConfig;
 
 public class PreviewManager {
@@ -19,27 +15,20 @@ public class PreviewManager {
     private static boolean wasHoldKeyDown = false;
     private static boolean wasFilterKeyDown = false;
 
-    public static void onClientTick() {
-        // Input handling moved to handleInput()
-    }
-
     public static void handleInput() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
-        // Handle toggle key
         boolean isToggleKeyDown = ModKeybinds.TOGGLE_PREVIEW.isDown();
         if (isToggleKeyDown && !wasToggleKeyDown) {
             togglePreview();
         }
         wasToggleKeyDown = isToggleKeyDown;
 
-        // Handle hold key
         boolean isHoldKeyDown = ModKeybinds.HOLD_PREVIEW.isDown();
         holdKeyPressed = isHoldKeyDown;
         wasHoldKeyDown = isHoldKeyDown;
 
-        // Handle filter key
         boolean isFilterKeyDown = ModKeybinds.TOGGLE_BLOCK_FILTER.isDown();
         if (isFilterKeyDown && !wasFilterKeyDown) {
             toggleBlockFilter();
@@ -84,17 +73,6 @@ public class PreviewManager {
         }
     }
 
-    public static boolean isDoorUpper(Block block) {
-        return block instanceof DoorBlock;
-    }
-
-    public static boolean isTallPlantUpper(Block block) {
-        return block instanceof DoublePlantBlock;
-    }
-
-    public static DoubleBlockHalf getUpperHalf() {
-        return DoubleBlockHalf.UPPER;
-    }
 
     private static boolean hasFacingProperty(BlockState state) {
         if (state.hasProperty(BlockStateProperties.FACING)) return true;
