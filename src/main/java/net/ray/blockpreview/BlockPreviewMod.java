@@ -11,25 +11,20 @@ import net.ray.blockpreview.config.SimpleConfig;
 public class BlockPreviewMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        // Load config
-        SimpleConfig.load();
 
-        // Register keybinds
+        SimpleConfig.load();
         ModKeybinds.register();
 
-        // Register tick event
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            PreviewManager.onClientTick();
-        });
-
-        // Register input handler
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             PreviewManager.handleInput();
+            BlockPreviewRenderer.updatePreviewPosition();
         });
 
-        // Register render event - CORRECT Fabric API
-        WorldRenderEvents.END.register(context -> {
-            BlockPreviewRenderer.onRenderWorld(context.matrixStack(), context.projectionMatrix(), context.tickDelta());
+        WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
+            BlockPreviewRenderer.onRenderWorld(
+                    context.matrixStack(),
+                    context.camera()
+            );
         });
 
         System.out.println("Block Preview Mod (Fabric) initialized!");
